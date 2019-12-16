@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { withRouter } from 'react-router-dom'
 import Modal from './Modal';
 
+/* Application is Completed */
 
 class MasonryC extends React.Component {
     constructor(props) {
