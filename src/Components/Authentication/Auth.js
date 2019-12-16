@@ -33,9 +33,26 @@ export default class Auth extends React.Component {
         });
     }
 
+    handleSubmit = () => {
+        if (this.validateForm(this.state.errors)) {
+            console.log("Submitting");
+        }
+        else {
+            console.log("Not submitting");
+        }
+    }
+
+    validateForm = (errors) => {
+        return Object.keys(errors).map((val) => {
+            console.log(errors[val].length > 0 || this.state[val] == '')
+            return (errors[val].length > 0 || this.state[val] == '');
+        }
+        ).filter(item => item).length == 0;
+    }
+
     render() {
         return (
-            <div>
+            <div style={{marginTop:"50px"}}>
                 <div className="centeredCss">
                     <h1>Sign In</h1>
                 </div>
@@ -44,11 +61,11 @@ export default class Auth extends React.Component {
                     {this.state.errors.email.length > 0 ? <span className="validation">{this.state.errors.email}</span> : null}
                 </div>
                 <div className="form-group">
-                    <input className="form-control" name="password" placeholder="Password" onChange={this.onChangeHandler}></input>
+                    <input className="form-control" name="password" type="password" placeholder="Password" onChange={this.onChangeHandler}></input>
                     {this.state.errors.password.length > 0 ? <span className="validation">{this.state.errors.password}</span> : null}
                 </div>
-                <div className="centeredCss">
-                    <button className="btn btn-primary">Submit</button>
+                <div className="centeredCss" >
+                    <button className="btn btn-primary" onClick={this.handleSubmit} >Submit</button>
                 </div>
             </div>
         );
