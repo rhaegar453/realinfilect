@@ -4,26 +4,31 @@ import './App.css'
 import { Switch, Route } from 'react-router-dom';
 import Masonry from './Components/Masonry/Masonry';
 import { connect } from 'react-redux';
+import { submitFormSuccess } from './store/Actions/index';
+
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      isLoggedIn:false
+    this.state = {
+      isLoggedIn: false
     }
   }
 
-  componentDidMount() {
-    let loggedIn=localStorage.getItem("data");
-    if(loggedIn){
-      this.setState({isLoggedIn:true});
+
+  componentWillMount() {
+    let loggedIn = localStorage.getItem("data");
+    if (loggedIn) {
+      this.setState({ isLoggedIn: true }, () => {
+        this.props.submitFormSuccess();
+      });
     }
   }
   render() {
     return (
       <div>
-        {this.state.isLoggedIn ? <Masonry></Masonry> : <div className="centeredCss">
+        {this.props.loggedIn ? <Masonry/> : <div className="centeredCss">
           <div className="col-md-4">
             <Auth />
           </div>
@@ -39,4 +44,11 @@ const mapStateToProps = (state) => {
   });
 }
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => {
+  return ({
+    submitFormSuccess: () => dispatch(submitFormSuccess())
+  })
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
