@@ -1,21 +1,24 @@
 import * as actions from '../ActionTypes/index';
 
-const initialState={
-    message:"Hello World",
-    value:0
+const initialState = {
+    loggedIn: false,
+    email: null,
+    password: null,
+    loading: false,
+    error: true
 }
 
 
-const reducer=(state=initialState, action)=>{
-    switch(action.type){
-        case actions.HELLO_WORLD:
-            return {...state, message:"Hello Boilerplate"};
-        case 'INCREMENT':
-            return {...state, value:state.value+1}
-        case 'DECREMENT':
-            return {...state, value:state.value-1};
+const reducer = (state = initialState, action) => {
+    switch (action.type) {
+        case actions.SUBMIT_FORM_START:
+            return { loading: true }
+        case actions.SUBMIT_FORM_SUCCESS:
+            return { loading: false, loggedIn: true }
+        case actions.SUBMIT_FORM_FAILURE:
+            return { loading: false, loggedIn: false, error: true }
         default:
-            return {...state};
+            return { ...state };
     }
 }
 

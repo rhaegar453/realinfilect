@@ -1,10 +1,12 @@
 import React from 'react';
 import '../../App.css';
+import { submitForm } from '../../store/Actions/index';
+import { connect } from 'react-redux';
 
 const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
 var passwordRegex = new RegExp(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/);
 
-export default class Auth extends React.Component {
+class Auth extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,11 +36,13 @@ export default class Auth extends React.Component {
     }
 
     handleSubmit = () => {
+        let { email, password } = this.state;
         if (this.validateForm(this.state.errors)) {
             console.log("Submitting");
+            this.props.submitForm( email, password );
         }
         else {
-            console.log("Not submitting");
+            console.error("Error submitting the form");
         }
     }
 
@@ -52,7 +56,7 @@ export default class Auth extends React.Component {
 
     render() {
         return (
-            <div style={{marginTop:"50px"}}>
+            <div style={{ marginTop: "50px" }}>
                 <div className="centeredCss">
                     <h1>Sign In</h1>
                 </div>
@@ -71,3 +75,12 @@ export default class Auth extends React.Component {
         );
     }
 }
+
+
+const mapDispatchToProps = (dispatch) => {
+    return ({
+        submitForm: (email, password) => dispatch(submitForm({email, password} ))
+    });
+}
+
+export default connect(null, mapDispatchToProps)(Auth);

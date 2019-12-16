@@ -1,38 +1,36 @@
-import {put,takeEvery, all} from 'redux-saga/effects';
+import { put, takeEvery, all } from 'redux-saga/effects';
 import * as actions from '../ActionTypes/index';
-import {decrementValue, incrementValue, increment, decrement} from '../Actions/index';
-
-const delay=(ms)=>new Promise((res)=>setTimeout(res, ms));
+import { submitForm, submitFormFailure, submitFormSuccess } from '../Actions/index';
 
 
-
-function* helloSaga(){
-    console.log("Hello World this is the boilerplate");
+function* submitFormS(data) {
+    console.log(data);
+    let localData = localStorage.getItem("data");
+    console.log(localData);
+    if (localData) {
+        let currentDetails = JSON.parse(localData);
+        if (data.payload.password == currentDetails.password) {
+            yield put(submitFormSuccess());
+        }
+        else {
+            yield put(submitFormFailure());
+        }
+    }
+    else {
+        localStorage.setItem("data", JSON.stringify({ email: data.payload.email, password: data.payload.password }));
+        yield put(submitFormSuccess());
+    }
 }
 
-function* incrementAsync(){
-    console.log("Incrementing the value");
-    yield delay(1000);
-    yield(put(increment()));
-}
-function* decrementAsync(){
-    console.log("Decrementing the value");
-    yield delay(1000);
-    yield(put(decrement()));
+function* watchActions() {
+    yield takeEvery(actions.SUBMIT_FORM, submitFormS);
 }
 
-function* watchActions(){
-    yield takeEvery(actions.HELLO_WORLD, helloSaga);
-    yield takeEvery(actions.INCREMENT_VALUE,incrementAsync);
-    yield takeEvery(actions.DECREMENT_VALUE, decrementAsync);
-}
-
-export default function* rootSaga(){
+export default function* rootSaga() {
     yield all([
-        helloSaga(),
         watchActions()
     ])
 }
 
 
-    
+
